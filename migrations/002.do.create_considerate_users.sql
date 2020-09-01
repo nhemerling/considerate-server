@@ -1,4 +1,4 @@
-CREATE TABLE thingful_users (
+CREATE TABLE considerate_users (
   id SERIAL PRIMARY KEY,
   user_name TEXT NOT NULL UNIQUE,
   full_name TEXT NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE thingful_users (
   date_modified TIMESTAMPTZ
 );
 
-ALTER TABLE thingful_things
+ALTER TABLE considerate_friends
   ADD COLUMN
-    user_id INTEGER REFERENCES thingful_users(id)
+    user_id INTEGER REFERENCES considerate_users(id)
     ON DELETE SET NULL;
