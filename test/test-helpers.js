@@ -46,7 +46,7 @@ function makeFriendsArray(users) {
       occasion: 'Birthday',
       user_id: users[0].id,
       occasion_date: '2029-01-22',
-      loves: ['love1', 'love2', 'love3'],
+      likes: ['like1', 'like2', 'like3'],
       date_created: '2029-01-22T16:28:32.615Z',
     },
     {
@@ -55,7 +55,7 @@ function makeFriendsArray(users) {
       occasion: 'Graduation',
       user_id: users[1].id,
       occasion_date: '2029-01-22',
-      loves: ['love1', 'love2', 'love3'],
+      likes: ['like1', 'like2', 'like3'],
       date_created: '2029-01-22T16:28:32.615Z',
     },
     {
@@ -64,7 +64,7 @@ function makeFriendsArray(users) {
       occasion: 'Anniversary',
       user_id: users[2].id,
       occasion_date: '2029-01-22',
-      loves: ['love1', 'love2', 'love3'],
+      likes: ['like1', 'like2', 'like3'],
       date_created: '2029-01-22T16:28:32.615Z',
     },
     {
@@ -73,7 +73,7 @@ function makeFriendsArray(users) {
       occasion: 'Birthday',
       user_id: users[3].id,
       occasion_date: '2029-01-22',
-      loves: ['love1', 'love2', 'love3'],
+      likes: ['like1', 'like2', 'like3'],
       date_created: '2029-01-22T16:28:32.615Z',
     },
     {
@@ -82,7 +82,7 @@ function makeFriendsArray(users) {
       occasion: 'Birthday',
       user_id: users[2].id,
       occasion_date: '2029-01-22',
-      loves: ['love1', 'love2', 'love3'],
+      likes: ['like1', 'like2', 'like3'],
       date_created: '2029-01-22T16:28:32.615Z',
     },
   ];
@@ -97,7 +97,7 @@ function makeExpectedFriend(users, friend) {
     occasion: friend.occasion,
     occasion_date: friend.occasion_date,
     date_created: friend.date_created,
-    loves: friend.loves,
+    likes: friend.likes,
     user: {
       id: user.id,
       user_name: user.user_name,
@@ -111,7 +111,7 @@ function makeExpectedFriend(users, friend) {
 function makeMaliciousFriend(user) {
   const maliciousFriend = {
     id: 911,
-    loves: ['love1', 'love2', 'love3'],
+    likes: ['like1', 'like2', 'like3'],
     date_created: new Date().toISOString(),
     friend_name: 'Naughty naughty very naughty <script>alert("xss");</script>',
     user_id: user.id,
