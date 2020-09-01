@@ -80,7 +80,7 @@ function makeFriendsArray(users) {
       id: 5,
       friend_name: 'First test friend!',
       occasion: 'Birthday',
-      user_id: users[4].id,
+      user_id: users[2].id,
       occasion_date: '2029-01-22',
       loves: ['love1', 'love2', 'love3'],
       date_created: '2029-01-22T16:28:32.615Z',
