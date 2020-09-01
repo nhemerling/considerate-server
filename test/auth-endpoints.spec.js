@@ -7,13 +7,13 @@ const jwt = require('jsonwebtoken');
 describe('Auth Endpoint', function () {
   let db;
 
-  const { testUsers } = helpers.makeThingsFixtures();
+  const { testUsers } = helpers.makeFriendsFixtures();
   const testUser = testUsers[0];
 
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
-      connection: process.env.TEST_DB_URL,
+      connection: process.env.TEST_DATABASE_URL,
     });
     app.set('db', db);
   });
@@ -46,7 +46,7 @@ describe('Auth Endpoint', function () {
       });
     });
 
-    it('responds 400 \'invalid user_name or password\' when bad user_name', () => {
+    it("responds 400 'invalid user_name or password' when bad user_name", () => {
       const badUser = { user_name: 'not-user', password: 'good-pass' };
       return supertest(app)
         .post('/api/auth/login')
@@ -54,7 +54,7 @@ describe('Auth Endpoint', function () {
         .expect(400, { error: 'Incorrect user_name or password' });
     });
 
-    it('responds 400 \'invalid user_name or password\' when bad password', () => {
+    it("responds 400 'invalid user_name or password' when bad password", () => {
       const badPass = { user_name: 'dunder', password: 'bad-pass' };
       return supertest(app)
         .post('/api/auth/login')
