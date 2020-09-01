@@ -2,6 +2,20 @@ const xss = require('xss');
 const Treeize = require('treeize');
 
 const FriendsService = {
+  getUserFriends(db, user_id) {
+    return db
+      .from('considerate_friends AS fr')
+      .select(
+        'fr.id',
+        'fr.friend_name',
+        'fr.occasion',
+        'fr.occasion_date',
+        ...userFields
+      )
+      .where('fr.user_id', user_id)
+      .leftJoin('considerate_users AS usr', 'fr.user_id', 'usr.id')
+      .groupBy('fr.id', 'usr.id');
+  },
   serializeFriends(friends) {
     return friends.map(this.serializeFriend);
   },

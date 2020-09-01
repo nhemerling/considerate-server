@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
 const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
+const friendsRouter = require('./friends/friends-router');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cors());
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/friends', friendsRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');
