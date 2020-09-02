@@ -16,6 +16,36 @@ const FriendsService = {
       .leftJoin('considerate_users AS usr', 'fr.user_id', 'usr.id')
       .groupBy('fr.id', 'usr.id');
   },
+
+  getById(db, friend_id, user_id) {
+    return db
+      .from('considerate_friends AS fr')
+      .select(
+        'fr.id',
+        'fr.friend_name',
+        'fr.occasion',
+        'fr.occasion_date',
+        ...userFields
+      )
+      .where('fr.user_id', user_id)
+      .andWhere('fr.id', friend_id)
+      .leftJoin('considerate_users AS usr', 'fr.user_id', 'usr.id')
+      .groupBy('fr.id', 'usr.id')
+      .first();
+  },
+
+  getLikesForFriend(db, friend_id, user_id) {
+    return db
+      .from('considerate_likes AS lik')
+      .select('lik.id', 'lik.like_name', ...userFields)
+      .where('fr.user_id', user_id)
+      .andWhere('fr.id', friend_id)
+      .leftJoin('friend_likes AS fl', 'lik.id', 'fl.like_id')
+      .leftJoin('considerate_friends AS fr', 'fl.friend_id', 'fr.id')
+      .leftJoin('considerate_users AS usr', 'fr.user_id', 'usr.id')
+      .groupBy('lik.id', 'fr.id', 'usr.id');
+  },
+
   serializeFriends(friends) {
     return friends.map(this.serializeFriend);
   },
