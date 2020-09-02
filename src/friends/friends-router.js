@@ -1,18 +1,40 @@
 const express = require('express');
+const path = require('path');
 const FriendsService = require('./friends-service');
 const { requireAuth } = require('../middleware/jwt-auth');
 
 const friendsRouter = express.Router();
 const jsonBodyParser = express.json();
 
-friendsRouter.route('/').get(requireAuth, (req, res, next) => {
-  const user_id = req.user.id;
-  FriendsService.getUserFriends(req.app.get('db'), user_id)
-    .then((friends) => {
-      res.json(FriendsService.serializeFriends(friends));
-    })
-    .catch(next);
-});
+friendsRouter
+  .route('/')
+  .get(requireAuth, (req, res, next) => {
+    const user_id = req.user.id;
+    FriendsService.getUserFriends(req.app.get('db'), user_id)
+      .then((friends) => {
+        res.json(FriendsService.serializeFriends(friends));
+      })
+      .catch(next);
+  })
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { friend_name, occasion, occasion_date } = req.body;
+    const newFriend = { friend_name, occasion, occasion_date };
+
+    for (const [key, value] of Object.entries(newFriend))
+      if (value == null)
+        return res.status(400).json({
+          error: `Mising '${key}' in request body`,
+        });
+
+    newFriend.user_id = req.user.id;
+
+    FriendsService.insertFriend(req.app.get('db'), newFriend).then((friend) => {
+      res
+        .status(201)
+        .location(path.posix.join(req.originalUrl, `/${friend.id}`))
+        .json(friend);
+    });
+  });
 
 friendsRouter
   .route('/:friend_id')
@@ -36,11 +58,33 @@ friendsRouter
         res.json(likes);
       })
       .catch(next);
+  })
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { likes } = req.body;
+    const newLikes = { likes };
+
+    for (const [key, value] of Object.entries(newLikes))
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`,
+        });
+
+    const friendId = req.params.friend_id;
+
+    newLikes.likes.forEach((newLike) => {
+      newLike.friend_id = friendId;
+
+      FriendsService.insertLike(req.app.get('db'), newLike, req.user.id).then(
+        (newLikes) => {
+          res.status(201).json(newLikes);
+        }
+      );
+    });
   });
 
 async function checkFriendExists(req, res, next) {
   try {
-    const friend = await FriendsService.getById(
+    const friend = await FriendsService.getFriendById(
       req.app.get('db'),
       req.params.friend_id,
       req.user.id
