@@ -5,7 +5,7 @@ const { requireAuth } = require('../middleware/jwt-auth');
 const friendsRouter = express.Router();
 const jsonBodyParser = express.json();
 
-friendsRouter.route('/').get(jsonBodyParser, (req, res, next) => {
+friendsRouter.route('/').get(jsonBodyParser, requireAuth, (req, res, next) => {
   const { user_id } = req.body;
   FriendsService.getUserFriends(req.app.get('db'), user_id)
     .then((friends) => {
