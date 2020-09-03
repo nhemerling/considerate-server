@@ -61,7 +61,7 @@ friendsRouter
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { likes } = req.body;
-    const newLikes = { likes };
+    const newLikes = likes;
 
     for (const [key, value] of Object.entries(newLikes))
       if (value == null)
