@@ -61,9 +61,8 @@ friendsRouter
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { likes } = req.body;
-    const newLikes = likes;
 
-    for (const [key, value] of Object.entries(newLikes))
+    for (const [key, value] of Object.entries(likes))
       if (value == null)
         return res.status(400).json({
           error: `Missing '${key}' in request body`,
@@ -71,14 +70,17 @@ friendsRouter
 
     const friendId = req.params.friend_id;
 
-    newLikes.likes.forEach((newLike) => {
-      newLike.friend_id = friendId;
-
-      FriendsService.insertLike(req.app.get('db'), newLike, req.user.id).then(
-        (newLikes) => {
-          res.status(201).json(newLikes);
-        }
-      );
+    Promise.all(
+      likes.map((newLike) => {
+        newLike.friend_id = friendId;
+        return FriendsService.insertLike(
+          req.app.get('db'),
+          newLike,
+          req.user.id
+        );
+      })
+    ).then((allLikes) => {
+      res.status(201).json(allLikes);
     });
   });
 
