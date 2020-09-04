@@ -86,6 +86,10 @@ const FriendsService = {
       );
   },
 
+  deleteFriend(db, id) {
+    return db('considerate_friends').where({ id }).delete();
+  },
+
   serializeFriends(friends) {
     return friends.map(this.serializeFriend);
   },
