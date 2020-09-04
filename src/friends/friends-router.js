@@ -42,6 +42,13 @@ friendsRouter
   .all(checkFriendExists)
   .get((req, res) => {
     res.json(res.friend);
+  })
+  .delete((req, res, next) => {
+    FriendsService.deleteFriend(req.app.get('db'), req.params.friend_id)
+      .then((numRowsAffected) => {
+        res.status(204).end();
+      })
+      .catch(next);
   });
 
 friendsRouter
