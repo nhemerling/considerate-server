@@ -69,12 +69,6 @@ friendsRouter
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { likes } = req.body;
 
-    for (const [key, value] of Object.entries(likes))
-      if (value == null)
-        return res.status(400).json({
-          error: `Missing '${key}' in request body`,
-        });
-
     const friendId = req.params.friend_id;
 
     Promise.all(
