@@ -4,4 +4,5 @@ module.exports = {
   DATABASE_URL:
     process.env.DATABASE_URL || 'postgresql://nhemerling@localhost/considerate',
   JWT_SECRET: process.env.JWT_SECRET || 'b4fef35e-9b11-4fad-b98f-39b96b0ced3b',
+  CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'http://localhost:3000/',
 };
