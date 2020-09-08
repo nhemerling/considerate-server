@@ -17,7 +17,7 @@ friendsRouter
       .catch(next);
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { friend_name, occasion, occasion_date } = req.body;
+    const { friend_name, occasion, occasion_date, likes } = req.body;
     const newFriend = { friend_name, occasion, occasion_date };
 
     for (const [key, value] of Object.entries(newFriend))
@@ -29,10 +29,21 @@ friendsRouter
     newFriend.user_id = req.user.id;
 
     FriendsService.insertFriend(req.app.get('db'), newFriend).then((friend) => {
-      res
-        .status(201)
-        .location(path.posix.join(req.originalUrl, `/${friend.id}`))
-        .json(friend);
+      Promise.all(
+        likes.map((newLike) => {
+          newLike.friend_id = friend.id;
+          return FriendsService.insertLike(
+            req.app.get('db'),
+            newLike,
+            req.user.id
+          );
+        })
+      ).then((likes) => {
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${friend.id}`))
+          .json(friend);
+      });
     });
   });
 
