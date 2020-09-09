@@ -18,12 +18,13 @@ friendsRouter
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { friend_name, occasion, occasion_date, likes } = req.body;
+    const fieldsToCheck = { friend_name, occasion, occasion_date, likes };
     const newFriend = { friend_name, occasion, occasion_date };
 
-    for (const [key, value] of Object.entries(newFriend))
+    for (const [key, value] of Object.entries(fieldsToCheck))
       if (value == null)
         return res.status(400).json({
-          error: `Mising '${key}' in request body`,
+          error: `Missing '${key}' in request body`,
         });
 
     newFriend.user_id = req.user.id;
@@ -42,7 +43,7 @@ friendsRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${friend.id}`))
-          .json(friend);
+          .json(FriendsService.serializeFriend(friend));
       });
     });
   });
@@ -52,7 +53,7 @@ friendsRouter
   .all(requireAuth)
   .all(checkFriendExists)
   .get((req, res) => {
-    res.json(res.friend);
+    res.json(FriendsService.serializeFriend(res.friend));
   })
   .delete((req, res, next) => {
     FriendsService.deleteFriend(req.app.get('db'), req.params.friend_id)
@@ -68,9 +69,7 @@ friendsRouter
     const numberOfValues = Object.values(friendToUpdate).filter(Boolean).length;
     if (numberOfValues === 0) {
       return res.status(400).json({
-        error: {
-          message: `Request body must contain either 'friend_name', 'occasion' or 'occasion_date'`,
-        },
+        error: `Request body must contain either 'friend_name', 'occasion' or 'occasion_date'`,
       });
     }
 
@@ -96,7 +95,7 @@ friendsRouter
       req.user.id
     )
       .then((likes) => {
-        res.json(likes);
+        res.json(FriendsService.serializeFriendLikes(likes));
       })
       .catch(next);
   })
