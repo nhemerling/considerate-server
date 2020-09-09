@@ -60,6 +60,29 @@ friendsRouter
         res.status(204).end();
       })
       .catch(next);
+  })
+  .patch(jsonBodyParser, (req, res, next) => {
+    const { friend_name, occasion, occasion_date } = req.body;
+    const friendToUpdate = { friend_name, occasion, occasion_date };
+
+    const numberOfValues = Object.values(friendToUpdate).filter(Boolean).length;
+    if (numberOfValues === 0) {
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either 'friend_name', 'occasion' or 'occasion_date'`,
+        },
+      });
+    }
+
+    FriendsService.updateFriend(
+      req.app.get('db'),
+      req.params.friend_id,
+      friendToUpdate
+    )
+      .then((numRowsAffected) => {
+        res.status(204).end();
+      })
+      .catch(next);
   });
 
 friendsRouter

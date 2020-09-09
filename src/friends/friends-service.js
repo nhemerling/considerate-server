@@ -1,5 +1,4 @@
 const xss = require('xss');
-const Treeize = require('treeize');
 
 const FriendsService = {
   getUserFriends(db, user_id) {
@@ -90,19 +89,21 @@ const FriendsService = {
     return db('considerate_friends').where({ id }).delete();
   },
 
+  updateFriend(db, id, newFriendFields) {
+    return db('considerate_friends').where({ id }).update(newFriendFields);
+  },
+
   serializeFriends(friends) {
     return friends.map(this.serializeFriend);
   },
 
   serializeFriend(friend) {
-    const friendTree = new Treeize();
-    const friendData = friendTree.grow([friend]).getData()[0];
     return {
-      id: friendData.id,
-      friend_name: xss(friendData.friend_name),
-      occasion: xss(friendData.occasion),
-      occasion_date: friendData.occasion_date,
-      user_id: friendData.user_id,
+      id: friend.id,
+      friend_name: xss(friend.friend_name),
+      occasion: xss(friend.occasion),
+      occasion_date: friend.occasion_date,
+      user_id: friend.user_id,
     };
   },
 
@@ -111,11 +112,9 @@ const FriendsService = {
   },
 
   serializeFriendLike(like) {
-    const likeTree = new Treeize();
-    const likeData = likeTree.grow([like]).getData()[0];
     return {
-      id: likeData.id,
-      like_name: xss(likeData.like_name),
+      id: like.id,
+      like_name: xss(like.like_name),
     };
   },
 };
