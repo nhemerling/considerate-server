@@ -1,17 +1,47 @@
-# Express Boilerplate!
+# Considerate Server
 
-This is a boilerplate project used for starting new projects!
+This is the server for the Considerate App.
 
-## Set up
+## Setting Up
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+- Install dependencies: `npm install`
+- Create development and test databases: `createdb considerate`, `createdb considerate-test`
+- Create database user: `createuser considerate`
+- Grant privileges to new user in `psql`:
+  - `GRANT ALL PRIVILEGES ON DATABASE considerate TO considerate`
+  - `GRANT ALL PRIVILEGES ON DATABASE "considerate-test" TO considerate`
+- Prepare environment file: `touch .env`
+- Fill `.env` with your custom values for:
+  - `NODE_ENV`
+  - `PORT`
+  - `DATABASE_URL`
+  - `TEST_DATABASE_URL`
+  - `JWT_SECRET`
+  - `CLIENT_ORIGIN`
+- Bootstrap development database: `npm run migrate`
+- Bootstrap test database: `npm run migrate:test`
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+### Configuring Postgres
+
+For tests involving time to run properly, your Postgres database must be configured to run in the UTC timezone.
+
+1. Locate the `postgresql.conf` file for your Postgres installation.
+   - OS X, Homebrew: `/usr/local/var/postgres/postgresql.conf`
+2. Uncomment the `timezone` line and set it to `UTC` as follows:
+
+```
+# - Locale and Formatting -
+
+datestyle = 'iso, mdy'
+#intervalstyle = 'postgres'
+timezone = 'UTC'
+#timezone_abbreviations = 'Default'     # Select the set of available time zone
+```
+
+## Sample Data
+
+- To seed the database for development: `psql -U considerate -d considerate -a -f seeds/seed.considerate_tables.sql`
+- To clear seed data: `psql -U considerate -d considerate -a -f seeds/trunc.considerate_tables.sql`
 
 ## Scripts
 
@@ -21,6 +51,6 @@ Start nodemon for the application `npm run dev`
 
 Run the tests `npm test`
 
-## Deploying
+Migrate the dev database `npm run migrate`
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+Migrate the test database `npm run migrate:test`
