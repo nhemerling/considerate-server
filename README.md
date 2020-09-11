@@ -1,6 +1,25 @@
 # Considerate Server
 
 This is the server for the Considerate App.
+Considerate helps you keep track of the things your friends like and of the occasions when you'd like to give them the perfect gift.
+You can be the thoughtful friend you've always meant to be.
+
+## Link to Live App
+
+https://immense-bayou-75450.herokuapp.com/
+
+## Where Components Live
+
+- Migrations are found in `/migrations`
+- Seeding and truncating database files are found in `/seeds`
+- The knex instance and server are found in `/src/server.js`
+- The various configurations are found in `/src/config.js`
+- Middleware and error handling function are found in `/src/app.js`
+- Authorization router and service are found in `/src/auth`
+- User router and service are found in `/src/users`
+- JWT middleware is found in `/src/middleware`
+- Friends router and service are found in `/src/friends`
+- Tests are found in `/test`
 
 ## Setting Up
 
